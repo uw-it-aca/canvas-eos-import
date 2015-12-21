@@ -1,11 +1,12 @@
+from django.core.management.base import BaseCommand
 from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
 from django.core.mail import mail_admins
 from django.utils.log import getLogger
 from django.utils.timezone import utc
 from restclients.sws.term import get_term_by_year_and_quarter
 from restclients.models.sws import Section
 from restclients.exceptions import DataFailureException
+from sis_provisioner.management.commands import SISProvisionerCommand
 from sis_provisioner.models import SubAccountOverride, Import
 from sis_provisioner.pidfile import Pidfile, ProcessRunningException
 from eos.models import EOSCourseDelta
@@ -23,7 +24,7 @@ QUARTER_DEFAULT = 'autumn'
 YEAR_DEFAULT = '2015'
 
 
-class Command(BaseCommand):
+class Command(SISProvisionerCommand):
     help = "Poll EOS for course and instructor delta"
 
     option_list = BaseCommand.option_list + (
@@ -125,9 +126,11 @@ class Command(BaseCommand):
         except:
             imp.csv_errors = traceback.format_exc()
             imp.save()
+            self.update_job()
             return
 
         if (not len(import_courses) and not len(import_registrations)):
+            self.update_job()
             return
 
         imp.save()
@@ -150,3 +153,5 @@ class Command(BaseCommand):
             imp.import_csv()
         elif not imp.csv_errors:
             imp.delete()
+
+        self.update_job()

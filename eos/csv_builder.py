@@ -6,8 +6,9 @@ from sis_provisioner.models import Enrollment
 class EOSCSVBuilder(CSVBuilder):
 
     def generate_csv(self, sections=[], registrations=[]):
+        self._include_enrollment = False
         for section in sections:
-            self.generate_primary_section_csv(section, include_enrollment=False)
+            self.generate_primary_section_csv(section)
 
         for registration in registrations:
             self.generate_user_csv_for_person(registration.person, force=True)

@@ -18,9 +18,6 @@ setup(
         'django',
         'lxml==2.3.5'
     ],
-    dependency_links = [
-        'http://github.com/uw-it-aca/uw-restclients#egg=RestClients'
-    ],
     license='Apache License, Version 2.0',  # example license
     description='Imports EOS courses to UW Canvas',
     long_description=README,

@@ -1,5 +1,6 @@
 from sis_provisioner.csv_builder import CSVBuilder
-from sis_provisioner.csv_formatters import csv_for_sis_student_enrollment
+from sis_provisioner.csv_formatters import csv_for_enrollment
+from sis_provisioner.models import Enrollment
 
 
 class EOSCSVBuilder(CSVBuilder):
@@ -13,7 +14,11 @@ class EOSCSVBuilder(CSVBuilder):
             self.generate_user_csv_for_person(registration.person, force=True)
 
             if registration.person.uwregid not in self._invalid_users:
-                csv_data = csv_for_sis_student_enrollment(registration)
+                section_id = registration.section.canvas_section_sis_id()
+                status = Enrollment.ACTIVE_STATUS if (
+                    registration.is_active) else Enrollment.DELETED_STATUS
+                csv_data = csv_for_enrollment(section_id, registration.person,
+                                              self.STUDENT_ROLE, status)
                 self._csv.add_enrollment(csv_data)
 
         return self._csv.write_files()

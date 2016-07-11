@@ -24,4 +24,5 @@ class EOSCourseDelta(models.Model):
     objects = EOSCourseDeltaManager()
 
     class Meta:
+        app_label = 'eos'
         get_latest_by = 'query_date'

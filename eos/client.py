@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.utils.log import getLogger
+from logging import getLogger
 from django.utils.timezone import localtime
 from restclients.dao_implementation.live import get_con_pool, get_live_url
 from restclients.dao_implementation.mock import get_mockdata_url

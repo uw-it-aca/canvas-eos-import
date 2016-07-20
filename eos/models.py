@@ -3,7 +3,7 @@ from django.db import models
 
 class EOSCourseDeltaManager(models.Manager):
     def queued(self, queue_id):
-        return super(EOSCourseDeltaManager, self).get_query_set().filter(
+        return super(EOSCourseDeltaManager, self).get_queryset().filter(
             queue_id=queue_id)
 
     def dequeue(self, queue_id, provisioned_date=None):
